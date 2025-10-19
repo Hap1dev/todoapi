@@ -74,8 +74,6 @@ PORT=3000
 DATABASE_URL=postgres://postgres:root@localhost:5432/todoapi
 ```
 
-> **Security note:** Do not commit `.env` to version control. Add it to `.gitignore`.
-
 ---
 
 ## 5. Database schema & setup
@@ -94,7 +92,7 @@ CREATE DATABASE todoapi;
 ```sql
 CREATE TABLE tasks (
   id SERIAL PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
+  title TEXT NOT NULL,
   description TEXT,
   is_done BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -122,7 +120,7 @@ CREATE TABLE users (
 1. Clone the repo and install dependencies:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Hap1dev/todoapi.git
 cd todoapi
 npm install
 ```
@@ -192,32 +190,7 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
 
 ---
 
-## 9. Postman — how to test & export collection
-
-### Creating a collection and requests
-
-1. Open Postman.
-2. Create a new Collection named `todoapi`.
-3. Add requests for each endpoint (register, login, create task, get all, get one, update, delete).
-4. For protected endpoints, use the Authorization tab with Bearer Token (paste token returned from `/login`).
-
-### How to save a token in Postman (optional convenience)
-
-* Use *Collection/Folder Pre-request Script* or an *environment variable*:
-
-  * After login, copy the token and set an environment variable `jwt`.
-  * In other requests Authorization header use: `Bearer {{jwt}}`.
-
-### Exporting a collection
-
-1. Right-click the collection → Export.
-2. Choose version (2.1 recommended) → Export to JSON. Attach this JSON when you submit.
-
-> I can create and export a sample Postman collection for you if you want — tell me and I will produce the JSON.
-
----
-
-## 10. Cron job — implementation and explanation
+## 9. Cron job — implementation and explanation
 
 The Cron job checks new tasks every 5 minutes and sends a notification email when new tasks are added in the last 5 minutes.
 
@@ -274,7 +247,7 @@ export default notifier;
 ### Using the cron job in `index.js`
 
 ```js
-import notifier from './cronJob.js';
+import notifier from './cron/cronJob.js';
 
 // ... other imports and app setup
 
