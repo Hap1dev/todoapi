@@ -2,7 +2,7 @@ import cron from "node-cron";
 import db from "./db.js";
 import nodemailer from "nodemailer";
 
-function notifier(){
+function notifier{
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
