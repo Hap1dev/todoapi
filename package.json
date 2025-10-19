@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "start": "dotenv -e .env node src/index.js",
+    "dev": "dotenv -e .env nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +14,14 @@
   "description": "",
   "dependencies": {
     "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
+    "dotenv-cli": "^10.0.0",
     "express": "^5.1.0",
-    "pg": "^8.16.3"
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.9",
+    "path": "^0.12.7",
+    "pg": "^8.16.3",
+    "url": "^0.11.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
