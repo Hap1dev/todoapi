@@ -66,8 +66,8 @@ This repository includes:
 Create a file called `.env` in the project root and add the following variables (example values):
 
 ```
-JWT_SECRET=your_super_secret_jwt_key
-EMAIL_USER=your.email@gmail.com
+JWT_SECRET=your_super_secret_jwt_key 
+EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_gmail_app_password
 EMAIL_TO=notify@example.com
 PORT=3000
@@ -136,13 +136,12 @@ npm install
 3. Run the server in development:
 
 ```bash
-# If entry file is index.js and package.json has "type": "module"
-node index.js
+npm start
 # or if you use nodemon (recommended during development)
-npx nodemon index.js
+npm run dev
 ```
 
-The API should now be listening on the port you set (e.g., `http://localhost:5000`).
+The API should now be listening on the port you set (e.g., `http://localhost:3000`).
 
 ---
 
@@ -153,7 +152,7 @@ The API should now be listening on the port you set (e.g., `http://localhost:500
 | Method | Path       | Auth required? | Description                                                |
 | ------ | ---------- | -------------- | ---------------------------------------------------------- |
 | POST   | /register  | No             | Create a new user (body: `username`, `password`)           |
-| POST   | /login     | No             | Login, returns `{ token }` (body: `username`, `password`)  |
+| POST   | /login     | No             | Login, returns `{ token: XXXXX }` (body: `username`, `password`)  |
 | POST   | /tasks     | Yes            | Create a new task (body: `title`, `description`)           |
 | GET    | /tasks     | Yes            | Get all tasks                                              |
 | GET    | /tasks/:id | Yes            | Get a specific task by id                                  |
@@ -162,7 +161,7 @@ The API should now be listening on the port you set (e.g., `http://localhost:500
 
 ### Example request (create task)
 
-**URL:** `POST http://localhost:5000/tasks`
+**URL:** `POST http://localhost:3000/tasks`
 **Headers:** `Authorization: Bearer <token>`
 **Body (JSON):**
 
@@ -190,8 +189,8 @@ The API should now be listening on the port you set (e.g., `http://localhost:500
 3. **Use the token** in Postman:
 
    * In Postman, open the request to a protected endpoint.
-   * Go to the *Authorization* tab → Type: *Bearer Token* → paste the token.
-   * Alternatively, in *Headers* add: `Authorization: Bearer <token>`
+   * Go to the *Auth* tab → Select *Bearer Token* under Auth Type → Paste your token in the token field
+   * Alternatively, in *Headers* add: `Authorization: Bearer <token>` (key: Authorization, value: <token>).
 
 > The server validates the JWT using `process.env.JWT_SECRET`.
 
@@ -235,46 +234,42 @@ The Cron job checks new tasks every 5 minutes and sends a notification email whe
 import cron from "node-cron";
 import db from "./db.js";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
 
-dotenv.config();
+function notifier(){
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+    cron.schedule("*/5 * * * *", async () => {
+        try {
+            const result = await db.query(
+                "SELECT * FROM tasks WHERE created_at > NOW() - interval '5 minutes'"
+            );
 
-const notifier = () => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+            if (result.rows.length > 0) {
+                console.log("New tasks added:", result.rows);
 
-  cron.schedule("*/5 * * * *", async () => {
-    try {
-      const result = await db.query(
-        "SELECT * FROM tasks WHERE created_at > NOW() - interval '5 minutes'"
-      );
+                const mailOptions = {
+                    from: process.env.EMAIL_USER,
+                    to: process.env.EMAIL_TO,
+                    subject: "New Tasks Added",
+                    text: `New tasks have been added:\n${JSON.stringify(result.rows, null, 2)}`,
+                };
 
-      if (result.rows.length > 0) {
-        console.log("New tasks added:", result.rows);
-
-        const mailOptions = {
-          from: process.env.EMAIL_USER,
-          to: process.env.EMAIL_TO,
-          subject: "New Tasks Added",
-          text: `New tasks have been added:\n${JSON.stringify(result.rows, null, 2)}`,
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) console.error("Error sending email:", error);
-          else console.log("Email sent:", info.response);
-        });
-      } else {
-        console.log("No new tasks in the last 5 minutes");
-      }
-    } catch (error) {
-      console.error("Cron job error:", error.message);
-    }
-  });
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) console.error("Error sending email:", error);
+                    else console.log("Email sent:", info.response);
+                });
+            } else {
+                console.log("No new tasks in the last 5 minutes");
+            }
+        } catch (error) {
+            console.error("Cron job error:", error.message);
+        }
+    });
 };
 
 export default notifier;
@@ -298,51 +293,3 @@ notifier(); // starts the cron job
 
 > Note: While testing locally you can confirm emails by using a console log or by using Ethereal / Mailtrap if you prefer not to use your Gmail account.
 
----
-
-## 11. Hosting notes (quick guide for AWS Elastic Beanstalk)
-
-> You mentioned you have not hosted yet. Below is a short path to get this live on AWS using Elastic Beanstalk. You can also use EC2 directly or services like Render.
-
-1. Install AWS CLI and EB CLI and configure credentials.
-2. In project root, create a `Procfile` (if needed):
-
-```
-web: node index.js
-```
-
-3. Ensure environment variables are set in Elastic Beanstalk console (DATABASE_URL, JWT_SECRET, EMAIL_USER, EMAIL_PASS, EMAIL_TO).
-4. `eb init` -> choose Node platform, `eb create` to create environment, then `eb deploy`.
-5. Confirm EB environment health and test publicly accessible URL.
-
-> For DB: either use AWS RDS (provision PostgreSQL and update `DATABASE_URL`) or keep using the local DB for dev (not recommended for production).
-
----
-
-## 12. Troubleshooting / common issues
-
-* **Nodemailer `535` / `534` Invalid login**: Use a Gmail App Password and ensure 2FA is enabled. Do not use your regular Gmail password.
-* **`Invalid token` or `Missing token`**: Ensure `Authorization: Bearer <token>` header is present. Use Postman Authorization → Bearer Token field to avoid formatting mistakes.
-* **Tokens invalid after server restart**: Make sure `JWT_SECRET` in `.env` is stable and not re-generated each run.
-* **DB connection errors**: Ensure `DATABASE_URL` is correct and PostgreSQL server is running. Test with `psql` or `pgAdmin`.
-
----
-
-## 13. Postman test ideas (automated tests you can add)
-
-* **Register**: assert `201` and returned `username`.
-* **Login**: assert `200` and token exists.
-* **Create task (authenticated)**: assert `201`, response contains `id`, `title`.
-* **Get all tasks**: assert `200`, returned is an array.
-* **Get specific task**: assert `200` for existing id, `404` for missing id.
-* **Update task**: assert `200` and field changes persisted.
-* **Delete task**: assert `200` and follow up `GET` returns `404`.
-* **Cron job**: create a task and check server logs for "New tasks added" within 5 minutes, or check email inbox for delivered message.
-
----
-
-## 14. Contact / Credits
-
-If you need a Postman collection exported or want me to produce the Postman JSON export (pre-filled with endpoints and sample requests), tell me and I will generate it for you.
-
-Good luck — once you want, I can also help with the AWS deployment steps (EB CLI commands and environment variable configuration) or produce the Postman collection JSON for upload.
