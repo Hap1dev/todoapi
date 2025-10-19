@@ -161,7 +161,7 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
 
 ### Example request (create task)
 
-**URL:** `POST http://localhost:3000/tasks`
+**URL:** `POST http://localhost:3000/api/tasks`
 **Headers:** `Authorization: Bearer <token>`
 **Body (JSON):**
 
