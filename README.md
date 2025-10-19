@@ -71,11 +71,7 @@ EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_gmail_app_password
 EMAIL_TO=notify@example.com
 PORT=3000
-POSTGRES_USER=postgres
-POSTGRES_HOST=localhost
-POSTGRES_PASSWORD=root
-POSTGRES_DATABASE=todoapi
-POSTGRES_PORT=5432
+DATABASE_URL=postgres://postgres:root@localhost:5432/todoapi
 ```
 
 > **Security note:** Do not commit `.env` to version control. Add it to `.gitignore`.
