@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "72b56016-e9ac-4ba3-87f7-68520240f0e5",
+		"name": "todoapi",
+		"description": "**todoapi** is a backend application built with **Node.js** and **Express.js**, designed to manage and track tasks efficiently through complete **CRUD (Create, Read, Update, Delete)** operations. It uses **PostgreSQL** as the database layer and implements **JWT-based authentication** to secure user-specific API routes.\n\nIn addition, a **Cron job** runs automatically every 5 minutes to identify newly created tasks and trigger **email notifications** using **Nodemailer**, ensuring timely task updates.\n\nThis project demonstrates strong backend engineering practices, including:\n\n- Modular and scalable **RESTful API design**\n    \n- **Database integration** with relational modeling\n    \n- **Authentication and authorization** best practices\n    \n- **Background job scheduling** for automation\n    \n- **Deployment-ready structure** for platforms like Render\n    \n\nThe project serves as an ideal reference for **production-grade backend systems** or as a **portfolio-ready showcase** of Node.js development expertise.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34259777"
+	},
+	"item": [
+		{
+			"name": "/api/register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "stevejobs",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"register"
+					]
+				},
+				"description": "Creates a new user account with a username and password.  \nThe password is securely hashed before saving to the database.\n\n**Example Request**\n\n``` bash\n{\n  \"username\": \"stevejobs\",\n  \"password\": \"1234\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n    \"id\": 7,\n    \"username\": \"stevejobs\",\n    \"password\": \"hashed-password\",\n    \"created_at\": \"2025-10-19T20:13:31.626Z\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "stevejobs",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"login"
+					]
+				},
+				"description": "Authenticates a user using their username and password.  \nReturns a JWT token on successful login.\n\n**Example Request**\n\n``` bash\n{\n  \"username\": \"stevejobs\",\n  \"password\": \"1234\"\n}\n\n ```\n\n**Example Response (on successfull authentication)**\n\n``` bash\n{\n  \"token\": \"generated-JWT-token\",\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title",
+							"value": "Schbang Assignment",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Backend intern assignment by schbang - to be submitted by 19 october 2025",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/tasks",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tasks"
+					]
+				},
+				"description": "Creates a new task for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns the created task details on success.\n\n**Example Request**\n\n``` bash\n{\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"false\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/tasks",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tasks"
+					]
+				},
+				"description": "Fetches all tasks belonging to the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns an array of task objects.\n\n**Example Request**\n\n``` bash\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n**Example Response**\n\n``` bash\n[\n  {\n    \"id\": 1,\n    \"title\": \"Finish backend assignment\",\n    \"description\": \"Complete the Schbang API assignment and upload by evening\",\n    \"is_done\": \"false\",\n    \"created_at\": \"2025-10-20T12:30:00.000Z\",\n    \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Buy groceries\",\n    \"description\": \"Milk, bread, and vegetables\",\n    \"is_done\": \"false\",\n    \"created_at\": \"2025-10-19T09:15:00.000Z\",\n    \"updated_at\": \"2025-10-19T10:00:00.000Z\"\n  }\n]\n\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/tasks/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tasks",
+						"1"
+					]
+				},
+				"description": "Fetches a specific task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns the task details if found, or an error message if the task does not exist.\n\n**Example Request**\n\n``` bash\nGET /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"false\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "is_done",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/tasks/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tasks",
+						"1"
+					]
+				},
+				"description": "Updates an existing task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nAllows updating one or more task fields such as `title`, `description`, or `is_done`.\n\n**Example Request**\n\n``` bash\nPUT /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n{\n  \"title\": \"Finish backend API assignment\",\n  \"is_done\": \"true\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend API assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"true\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T15:45:00.000Z\"\n}\n\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/tasks/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tasks",
+						"1"
+					]
+				},
+				"description": "### DELETE /api/tasks/:id\n\nDeletes a specific task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns a success message upon successful deletion or an error if the task does not exist.\n\n**Example Request**\n\n``` bash\nDELETE /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n``` bash\n{\n  \"message\": \"Task with id {id} deleted successfully\"\n}\n\n ```"
+			},
+			"response": []
+		}
+	]
+}
