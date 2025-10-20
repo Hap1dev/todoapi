@@ -2,6 +2,9 @@
 
 **To-Do List Backend (Node.js + Express + PostgreSQL)**
 
+**Hosted API:** [https://todoapi-2362.onrender.com/](https://todoapi-2362.onrender.com/)  
+**API Documentation / Postman Collection:** [https://documenter.getpostman.com/view/34259777/2sB3QQK8Eg](https://documenter.getpostman.com/view/34259777/2sB3QQK8Eg)
+
 A compact, production-minded README describing how to set up, run, test (Postman), and understand the Cron job and JWT authentication used by the `todoapi` project.
 
 ---
