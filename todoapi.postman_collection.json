@@ -19,8 +19,13 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
+							"key": "email",
+							"value": "moorjanichaitanya@gmail.com",
+							"type": "text"
+						},
+						{
 							"key": "username",
-							"value": "stevejobs",
+							"value": "chaitanya256",
 							"type": "text"
 						},
 						{
@@ -43,7 +48,89 @@
 				},
 				"description": "Creates a new user account with a username and password.  \nThe password is securely hashed before saving to the database.\n\n**Example Request**\n\n``` bash\n{\n  \"username\": \"stevejobs\",\n  \"password\": \"1234\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n    \"id\": 7,\n    \"username\": \"stevejobs\",\n    \"password\": \"hashed-password\",\n    \"created_at\": \"2025-10-19T20:13:31.626Z\"\n}\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/register",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "moorjanichaitanya@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "chaitanya256",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "186"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ba-AYqaqP5Hh5uIDhlRpe3UuYavPVc\""
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "connect.sid=s%3AkVEkldfc1hH99n0jpN04SbHprS8anJKn.sGAmldReVKfl4plMMKqWClRhy7ZiX1fEo8gDdmpITxY; Path=/; Expires=Thu, 23 Oct 2025 18:00:59 GMT; HttpOnly"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:00:59 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"email\": \"moorjanichaitanya@gmail.com\",\n    \"username\": \"chaitanya256\",\n    \"password\": \"$2b$10$watyIJ17itQJiJdnAQv4BeYcpFAMOrkrRP0sumR.STJEAam2N8ViO\",\n    \"created_at\": \"2025-10-23T17:00:59.939Z\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/api/login",
@@ -58,7 +145,7 @@
 					"urlencoded": [
 						{
 							"key": "username",
-							"value": "stevejobs",
+							"value": "chaitanya256",
 							"type": "text"
 						},
 						{
@@ -81,7 +168,84 @@
 				},
 				"description": "Authenticates a user using their username and password.  \nReturns a JWT token on successful login.\n\n**Example Request**\n\n``` bash\n{\n  \"username\": \"stevejobs\",\n  \"password\": \"1234\"\n}\n\n ```\n\n**Example Response (on successfull authentication)**\n\n``` bash\n{\n  \"token\": \"generated-JWT-token\",\n}\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "chaitanya256",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "155"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"9b-89XKZqrwv5uG1VAJgQ+VbRCmEL8\""
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "connect.sid=s%3AkVEkldfc1hH99n0jpN04SbHprS8anJKn.sGAmldReVKfl4plMMKqWClRhy7ZiX1fEo8gDdmpITxY; Path=/; Expires=Thu, 23 Oct 2025 18:01:37 GMT; HttpOnly"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:01:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/api/tasks",
@@ -91,7 +255,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4",
 							"type": "string"
 						}
 					]
@@ -108,7 +272,7 @@
 						},
 						{
 							"key": "description",
-							"value": "Backend intern assignment by schbang - to be submitted by 19 october 2025",
+							"value": "Backend intern assignment by Schbang - to be submitted by 19 october 2025",
 							"type": "text"
 						}
 					]
@@ -126,7 +290,80 @@
 				},
 				"description": "Creates a new task for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns the created task details on success.\n\n**Example Request**\n\n``` bash\n{\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"false\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n}\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/tasks",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Schbang Assignment",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Backend intern assignment by Schbang - to be submitted by 19 october 2025",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/tasks",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "231"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e7-P/WDnIF458X0n570YNO4P3LRG9E\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:02:17 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"uid\": 1,\n    \"title\": \"Schbang Assignment\",\n    \"description\": \"Backend intern assignment by Schbang - to be submitted by 19 october 2025\",\n    \"is_done\": false,\n    \"created_at\": \"2025-10-23T17:02:17.628Z\",\n    \"updated_at\": \"2025-10-23T17:02:17.628Z\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/api/tasks",
@@ -136,7 +373,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4",
 							"type": "string"
 						}
 					]
@@ -156,7 +393,65 @@
 				},
 				"description": "Fetches all tasks belonging to the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns an array of task objects.\n\n**Example Request**\n\n``` bash\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n**Example Response**\n\n``` bash\n[\n  {\n    \"id\": 1,\n    \"title\": \"Finish backend assignment\",\n    \"description\": \"Complete the Schbang API assignment and upload by evening\",\n    \"is_done\": \"false\",\n    \"created_at\": \"2025-10-20T12:30:00.000Z\",\n    \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Buy groceries\",\n    \"description\": \"Milk, bread, and vegetables\",\n    \"is_done\": \"false\",\n    \"created_at\": \"2025-10-19T09:15:00.000Z\",\n    \"updated_at\": \"2025-10-19T10:00:00.000Z\"\n  }\n]\n\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/tasks",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/tasks",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "233"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e9-sNZahmGu9uBH6e7q4bzQvRLkSQU\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:02:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"uid\": 1,\n        \"title\": \"Schbang Assignment\",\n        \"description\": \"Backend intern assignment by Schbang - to be submitted by 19 october 2025\",\n        \"is_done\": false,\n        \"created_at\": \"2025-10-23T17:02:17.628Z\",\n        \"updated_at\": \"2025-10-23T17:02:17.628Z\"\n    }\n]"
+				}
+			]
 		},
 		{
 			"name": "/api/tasks/{id}",
@@ -166,7 +461,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4",
 							"type": "string"
 						}
 					]
@@ -187,7 +482,66 @@
 				},
 				"description": "Fetches a specific task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns the task details if found, or an error message if the task does not exist.\n\n**Example Request**\n\n``` bash\nGET /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"false\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T12:30:00.000Z\"\n}\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/tasks/{id}",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/tasks/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "231"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e7-P/WDnIF458X0n570YNO4P3LRG9E\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:03:08 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"uid\": 1,\n    \"title\": \"Schbang Assignment\",\n    \"description\": \"Backend intern assignment by Schbang - to be submitted by 19 october 2025\",\n    \"is_done\": false,\n    \"created_at\": \"2025-10-23T17:02:17.628Z\",\n    \"updated_at\": \"2025-10-23T17:02:17.628Z\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/api/tasks/{id}",
@@ -197,7 +551,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4",
 							"type": "string"
 						}
 					]
@@ -228,7 +582,76 @@
 				},
 				"description": "Updates an existing task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nAllows updating one or more task fields such as `title`, `description`, or `is_done`.\n\n**Example Request**\n\n``` bash\nPUT /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n{\n  \"title\": \"Finish backend API assignment\",\n  \"is_done\": \"true\"\n}\n\n ```\n\n**Example Response**\n\n``` bash\n{\n  \"id\": 1,\n  \"title\": \"Finish backend API assignment\",\n  \"description\": \"Complete the Schbang API assignment and upload by evening\",\n  \"is_done\": \"true\",\n  \"created_at\": \"2025-10-20T12:30:00.000Z\",\n  \"updated_at\": \"2025-10-20T15:45:00.000Z\"\n}\n\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/tasks/{id}",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "is_done",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/tasks/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "230"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e6-45YjjhWAjSm/73GGPfgNEZrrHJc\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:03:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"uid\": 1,\n    \"title\": \"Schbang Assignment\",\n    \"description\": \"Backend intern assignment by Schbang - to be submitted by 19 october 2025\",\n    \"is_done\": true,\n    \"created_at\": \"2025-10-23T17:02:17.628Z\",\n    \"updated_at\": \"2025-10-23T17:03:28.127Z\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/api/tasks/{id}",
@@ -238,7 +661,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MTIzODg5NywiZXhwIjoxNzYxMjQyNDk3fQ.ztIkHq57bVreqLX5LQjooN1r-HHdY1D-cK-g8_yFfD4",
 							"type": "string"
 						}
 					]
@@ -259,7 +682,66 @@
 				},
 				"description": "### DELETE /api/tasks/:id\n\nDeletes a specific task by its **ID** for the authenticated user.  \nRequires a valid **Bearer Token** in the request header.  \nReturns a success message upon successful deletion or an error if the task does not exist.\n\n**Example Request**\n\n``` bash\nDELETE /api/tasks/1\nAuthorization: Bearer <your-JWT-token>\n\n ```\n\n``` bash\n{\n  \"message\": \"Task with id {id} deleted successfully\"\n}\n\n ```"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/api/tasks/{id}",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/tasks/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "49"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"31-fnvLD+V/Ga6XSLKNfIUcND5Regc\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 23 Oct 2025 17:03:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Task with id 1 deleted successfully\"\n}"
+				}
+			]
 		}
 	]
 }
