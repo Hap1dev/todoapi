@@ -6,13 +6,17 @@ const router = express.Router();
 
 //post task
 router.post("/", authenticate, async (req, res) => {
+    const uid = req.session.user?.id;
     const title = req.body.title;
     const description = req.body.description;
+    if(!uid){
+        res.status(401).json({error: "User is not authenticated or session expired"});
+    }
     if (!title || title.trim() === '') {
         return res.status(400).json({ error: "Title is required" });
     }
     try {
-        const result = await db.query("INSERT INTO tasks(title, description) VALUES($1, $2) RETURNING *", [title, description]);
+        const result = await db.query("INSERT INTO tasks(uid, title, description) VALUES($1, $2, $3) RETURNING *", [uid, title, description]);
         const newTask = result.rows[0];
         res.status(201).json(newTask);
     } catch (error) {
@@ -40,13 +44,13 @@ router.get("/:id", authenticate, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const result = await db.query("SELECT * FROM tasks WHERE id = $1", [id]);
-        if (result.rows.length !== 0) {
-            const task = result.rows[0];
-            res.status(200).json(task);
-        } else {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
+        } else {
+            const task = result.rows[0];
+            res.status(200).json(task);
         }
     } catch (error) {
         res.status(500).json({
@@ -61,12 +65,12 @@ router.put("/:id", authenticate, async (req, res) => {
         const id = parseInt(req.params.id);
         const result = await db.query("SELECT * FROM tasks WHERE id = $1", [id]);
         var task = {};
-        if (result.rows.length !== 0) {
-            task = result.rows[0];
-        } else {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
+        } else {
+            task = result.rows[0];
         }
         const [title, description, is_done] = [req.body.title || task.title, req.body.description || task.description, req.body.is_done || task.is_done];
         const updated_at = new Date();
@@ -85,15 +89,15 @@ router.delete("/:id", authenticate, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const result = await db.query("SELECT * FROM tasks WHERE id = $1", [id]);
-        if (result.rows.length !== 0) {
-        	// const deletedTask = result.rows[0];
-            await db.query("DELETE FROM tasks WHERE id = $1", [id]);
-            res.status(200).json({message: `Task with id ${id} deleted successfully`});
-            // res.status(200).json(deletedTask);
-        } else {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
+        } else {
+            // const deletedTask = result.rows[0];
+            await db.query("DELETE FROM tasks WHERE id = $1", [id]);
+            res.status(200).json({message: `Task with id ${id} deleted successfully`});
+            // res.status(200).json(deletedTask);
         }
     } catch (error) {
         res.status(500).json({

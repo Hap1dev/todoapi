@@ -8,10 +8,11 @@ const router = express.Router();
 //register
 router.post("/register", async (req, res) => {
 	try{
+		const email = req.body.email;
 		const username = req.body.username;
 		const password = req.body.password;
 		const hashedPassword = await bcrypt.hash(password, 10);
-		const result = await db.query("INSERT INTO users(username, password) VALUES($1, $2) RETURNING *", [username, hashedPassword]);
+		const result = await db.query("INSERT INTO users(email, username, password) VALUES($1, $2, $3) RETURNING *", [email, username, hashedPassword]);
 		const user = result.rows[0];
 		res.status(201).json(user);
 	}catch(error){
@@ -29,11 +30,12 @@ router.post("/login", async (req, res) => {
 			return res.status(400).json({error: `No user with ${username} username found`});
 		}
 		const user = result.rows[0];
-		const match = bcrypt.compare(password, user.password);
+		const match = await bcrypt.compare(password, user.password);
 		if(!match){
 			return res.status(400).json({error: "Invalid credentials"});
 		}
 		const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+		req.session.user = { id: user.id };
 		res.status(200).json({token: token});
 	}catch(error){
 		res.status(500).json({message: error.message});

@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+import session from "express-session";
 import db from "./db.js";
 import notifier from "./cron/cronJob.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -13,6 +14,14 @@ const PORT = process.env.PORT;
 dotenv.config();
 
 app.use(cors());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 1000*60*60
+  } 
+}));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
