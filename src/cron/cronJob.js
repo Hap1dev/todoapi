@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import db from "./../db.js";
 import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 function notifier() {
     if (process.env.NODE_ENV === "production") {
