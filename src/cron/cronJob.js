@@ -10,7 +10,7 @@ function notifier() {
         cron.schedule("*/5 * * * *", async () => {
             try {
                 const result = await db.query(
-                    `SELECT tasks.id, users.email, tasks.title, tasks.description, tasks.is_done, tasks.created_at, tasks.updated_at FROM tasks INNER JOIN users ON tasks.uid = users.id WHERE tasks.created_at > NOW() - INTERVAL '5 minutes'`
+                    "SELECT tasks.id, users.email, tasks.title, tasks.description, tasks.is_done, tasks.created_at, tasks.updated_at FROM tasks INNER JOIN users ON tasks.uid = users.id WHERE tasks.created_at > NOW() - INTERVAL '5 minutes'"
                 );
 
                 if (result.rows.length > 0) {
