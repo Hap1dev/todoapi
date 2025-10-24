@@ -64,10 +64,9 @@ router.get("/:id", authenticate, async (req, res) => {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
-        } else {
-            const task = result.rows[0];
-            res.status(200).json(task);
         }
+        const task = result.rows[0];
+        res.status(200).json(task);
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -85,9 +84,8 @@ router.put("/:id", authenticate, async (req, res) => {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
-        } else {
-            task = result.rows[0];
         }
+        task = result.rows[0];
         const [title, description, is_done] = [req.body.title || task.title, req.body.description || task.description, req.body.is_done || task.is_done];
         const updated_at = new Date();
         const ut = await db.query("UPDATE tasks SET title = $1, description = $2, is_done = $3, updated_at = $4 WHERE id = $5 RETURNING *", [title, description, is_done, updated_at, id]);
@@ -109,12 +107,11 @@ router.delete("/:id", authenticate, async (req, res) => {
             return res.status(404).json({
                 message: `Task with id ${id} not found`
             });
-        } else {
-            // const deletedTask = result.rows[0];
-            await db.query("DELETE FROM tasks WHERE id = $1", [id]);
-            res.status(200).json({message: `Task with id ${id} deleted successfully`});
-            // res.status(200).json(deletedTask);
         }
+        // const deletedTask = result.rows[0];
+        await db.query("DELETE FROM tasks WHERE id = $1", [id]);
+        res.status(200).json({message: `Task with id ${id} deleted successfully`});
+        // res.status(200).json(deletedTask);
     } catch (error) {
         res.status(500).json({
             message: error.message
