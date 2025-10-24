@@ -29,8 +29,24 @@ router.post("/", authenticate, async (req, res) => {
 //get all tasks
 router.get("/", authenticate, async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM tasks");
-        const allTask = result.rows;
+        // const result = await db.query("SELECT * FROM tasks");
+        // const allTask = result.rows;
+        // res.status(200).json(allTask);
+
+        /* ------ UPDATE ------ */
+
+        // const result = await db.query("SELECT * FROM tasks");
+        const completed_tasks_result = await db.query("SELECT * FROM tasks WHERE is_done = true ORDER BY updated_at DESC");
+        const incomplete_tasks_result = await db.query("SELECT * FROM tasks WHERE is_done = false ORDER BY updated_at DESC");
+        const allTask = {
+            meta: {
+                total: completed_tasks_result.rows.length + incomplete_tasks_result.rows.length,
+                completed_count: completed_tasks_result.rows.length,
+                incomplete_count: incomplete_tasks_result.rows.length
+            },
+            completed_tasks: completed_tasks_result.rows,
+            incomplete_tasks: incomplete_tasks_result.rows
+        };
         res.status(200).json(allTask);
     } catch (error) {
         res.status(500).json({
