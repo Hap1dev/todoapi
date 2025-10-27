@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "./../db.js";
+import isPasswordValid from "./../utils/validatePassword.js";
 
 const router = express.Router();
 
@@ -11,6 +12,9 @@ router.post("/register", async (req, res) => {
 		const email = req.body.email;
 		const username = req.body.username;
 		const password = req.body.password;
+		if (!isPasswordValid(password)) {
+  			return res.status(400).json({ error: "Password must include uppercase, lowercase, number, symbol, and be at least 8 characters long" });
+		}
 		const hashedPassword = await bcrypt.hash(password, 10);
 		const result = await db.query("INSERT INTO users(email, username, password) VALUES($1, $2, $3) RETURNING *", [email, username, hashedPassword]);
 		const user = result.rows[0];
