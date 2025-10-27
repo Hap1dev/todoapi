@@ -10,7 +10,7 @@ router.post("/", authenticate, async (req, res) => {
     const title = req.body.title;
     const description = req.body.description;
     if(!uid){
-        res.status(401).json({error: "User is not authenticated or session expired"});
+        return res.status(401).json({error: "User is not authenticated or session expired"});
     }
     if (!title || title.trim() === '') {
         return res.status(400).json({ error: "Title is required" });
