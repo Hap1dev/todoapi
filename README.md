@@ -168,12 +168,12 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
 
 1. **Register** a user:
 
-   * `POST /register` with JSON body `{ "email": "example@gmail.com", "username": "myuser", "password": "mypassword" }`.
+   * `POST /api/register` with JSON body `{ "email": "example@gmail.com", "username": "myuser", "password": "mypassword" }`.
    * Passwords are hashed with `bcrypt` before storing.
 
 2. **Login** to get JWT:
 
-   * `POST /login` with JSON body `{ "username": "myuser", "password": "mypassword" }`.
+   * `POST /api/login` with JSON body `{ "username": "myuser", "password": "mypassword" }`.
    * If successful, response contains `{ "token": "<jwt>" }`.
 
 3. **Use the token** in Postman:
