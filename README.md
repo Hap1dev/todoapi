@@ -1,11 +1,7 @@
 # todoapi
 
-**To-Do List Backend (Node.js + Express + PostgreSQL)**
-
 **Hosted API:** [https://todoapi-2362.onrender.com/](https://todoapi-2362.onrender.com/)  
 **API Documentation:** [https://documenter.getpostman.com/view/34259777/2sB3QQK8Eg](https://documenter.getpostman.com/view/34259777/2sB3QQK8Eg)
-
-A compact, production-minded README describing how to set up, run, test (Postman), and understand the Cron job and JWT authentication used by the `todoapi` project.
 
 ---
 
@@ -19,12 +15,6 @@ A compact, production-minded README describing how to set up, run, test (Postman
 6. Install & run locally
 7. API endpoints (with authentication notes)
 8. Authentication flow (register / login / using token in Postman)
-9. Postman — how to test & export collection
-10. Cron job — implementation and explanation
-11. Hosting notes (quick guide for AWS)
-12. Troubleshooting / common issues
-13. Postman test ideas (suggested automated tests)
-14. Contact / Credits
 
 ---
 
@@ -37,7 +27,7 @@ This repository includes:
 * RESTful CRUD endpoints for `tasks`
 * JWT-based user authentication (protects task routes)
 * A `node-cron` job that runs every 5 minutes to detect newly created tasks
-* Nodemailer-based email notifications (Gmail App Password assumed)
+* Nodemailer-based (if running locally) email notifications (Gmail App Password assumed)
 
 ---
 
@@ -48,7 +38,7 @@ This repository includes:
 * PostgreSQL (database name: `todoapi`)
 * `pg` (node-postgres)
 * `node-cron`
-* `nodemailer`
+* `nodemailer`/`resend`
 * `jsonwebtoken` (JWT)
 * `bcrypt` (password hashing)
 * Postman for testing
@@ -69,12 +59,13 @@ This repository includes:
 Create a file called `.env` in the project root and add the following variables (example values):
 
 ```
-JWT_SECRET=your_super_secret_jwt_key 
+NODE_ENV=local
+SESSION_SECRET=your_super_secret_session_key
+JWT_SECRET=your_super_secret_jwt_key
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_gmail_app_password
-EMAIL_TO=notify@example.com
 PORT=3000
-DATABASE_URL=postgres://postgres:root@localhost:5432/todoapi
+DATABASE_URL=postgres://[user]:[password]@localhost:5432/todoapi
 ```
 
 ---
@@ -93,13 +84,14 @@ CREATE DATABASE todoapi;
 ### Tasks table
 
 ```sql
-CREATE TABLE tasks (
+CREATE TABLE tasks(
   id SERIAL PRIMARY KEY,
+  uid INT NOT NULL REFERENCES users(id),
   title TEXT NOT NULL,
   description TEXT,
   is_done BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
 );
 ```
 
@@ -107,10 +99,11 @@ CREATE TABLE tasks (
 
 ```sql
 CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(100) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
@@ -148,13 +141,13 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
 
 | Method | Path       | Auth required? | Description                                                |
 | ------ | ---------- | -------------- | ---------------------------------------------------------- |
-| POST   | /register  | No             | Create a new user (body: `username`, `password`)           |
-| POST   | /login     | No             | Login, returns `{ token: XXXXX }` (body: `username`, `password`)  |
-| POST   | /tasks     | Yes            | Create a new task (body: `title`, `description`)           |
-| GET    | /tasks     | Yes            | Get all tasks                                              |
-| GET    | /tasks/:id | Yes            | Get a specific task by id                                  |
-| PUT    | /tasks/:id | Yes            | Update a task (body: `title?`, `description?`, `is_done?`) |
-| DELETE | /tasks/:id | Yes            | Delete a task by id                                        |
+| POST   | /api/register  | No             | Create a new user (body: `email`, `username`, `password`)           |
+| POST   | /api/login     | No             | Login, returns `{ token: XXXXX }` (body: `username`, `password`)  |
+| POST   | /api/tasks     | Yes            | Create a new task (body: `title`, `description`)           |
+| GET    | /api/tasks     | Yes            | Get all tasks                                              |
+| GET    | /api/tasks/:id | Yes            | Get a specific task by id                                  |
+| PUT    | /api/tasks/:id | Yes            | Update a task (body: `title?`, `description?`, `is_done?`) |
+| DELETE | /api/tasks/:id | Yes            | Delete a task by id                                        |
 
 ### Example request (create task)
 
@@ -175,7 +168,7 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
 
 1. **Register** a user:
 
-   * `POST /register` with JSON body `{ "username": "myuser", "password": "mypassword" }`.
+   * `POST /register` with JSON body `{ "email": "example@gmail.com", "username": "myuser", "password": "mypassword" }`.
    * Passwords are hashed with `bcrypt` before storing.
 
 2. **Login** to get JWT:
@@ -190,78 +183,3 @@ The API should now be listening on the port you set (e.g., `http://localhost:300
    * Alternatively, in *Headers* add: `Authorization: Bearer <token>` (key: Authorization, value: <token>).
 
 > The server validates the JWT using `process.env.JWT_SECRET`.
-
----
-
-## 9. Cron job — implementation and explanation
-
-The Cron job checks new tasks every 5 minutes and sends a notification email when new tasks are added in the last 5 minutes.
-
-### Corrected and ready-to-use `cronJob.js`
-
-> Place this file at your project root (or `src/`) and import it from `index.js`.
-
-```js
-// cronJob.js
-import cron from "node-cron";
-import db from "./db.js";
-import nodemailer from "nodemailer";
-
-function notifier(){
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-    cron.schedule("*/5 * * * *", async () => {
-        try {
-            const result = await db.query(
-                "SELECT * FROM tasks WHERE created_at > NOW() - interval '5 minutes'"
-            );
-
-            if (result.rows.length > 0) {
-                console.log("New tasks added:", result.rows);
-
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
-                    to: process.env.EMAIL_TO,
-                    subject: "New Tasks Added",
-                    text: `New tasks have been added:\n${JSON.stringify(result.rows, null, 2)}`,
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) console.error("Error sending email:", error);
-                    else console.log("Email sent:", info.response);
-                });
-            } else {
-                console.log("No new tasks in the last 5 minutes");
-            }
-        } catch (error) {
-            console.error("Cron job error:", error.message);
-        }
-    });
-};
-
-export default notifier;
-```
-
-### Using the cron job in `index.js`
-
-```js
-import notifier from './cron/cronJob.js';
-
-// ... other imports and app setup
-
-notifier(); // starts the cron job
-```
-
-### How it works (explanation)
-
-* `node-cron` is configured with the expression `"*/5 * * * *"` — runs at every 5th minute.
-* Each run performs a query: tasks created within the last 5 minutes.
-* If rows are returned, the job sends an email via Nodemailer (Gmail SMTP) to the configured `EMAIL_TO` recipient and logs the results.
-
-> Note: While testing locally you can confirm emails by using a console log or by using Ethereal / Mailtrap if you prefer not to use your Gmail account.
-
